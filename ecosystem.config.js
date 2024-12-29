@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'dawn',
-      script: 'server.js',
+      script: 'dawn.service.js',
       instances: '1',
       exec_mode: 'cluster',
       autorestart: true,
