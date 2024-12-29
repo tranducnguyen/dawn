@@ -6,7 +6,8 @@ const { readFile } = require('./FileHelper.js');
 const https = require('https');
 const agentHttps = new https.Agent({ rejectUnauthorized: false, keepAlive: true });
 const TIME_DELAY = 2 * 60 * 1000;
-const VERSION_APP = '1.0.9';
+const VERSION_APP = '1.1.2';
+const APP_ID ='6771596643cdfcff64c75a08'
 const EXTENSION_ID = 'fpdkjdnhkakefebpekbdhillbhonfjjp';
 axiosRetry(axiosInstance, {
     retries: 3,
@@ -54,7 +55,7 @@ class DawnService {
                 proxy: false
             };
 
-            const resp = await axiosInstance.post(`https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive`, body, config);
+            const resp = await axiosInstance.post(`https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive?appid=${APP_ID}`, body, config);
             return {
                 code: 200,
                 metadata: resp.data
@@ -115,7 +116,7 @@ class DawnService {
                 httpsAgent: await ProfileHelper.parseProxy(proxy),
             };
 
-            const resp = await axiosInstance.get(`https://www.aeropres.in/api/atom/v1/userreferral/getpoint`, config);
+            const resp = await axiosInstance.get(`https://www.aeropres.in/api/atom/v1/userreferral/getpoint?appid=${APP_ID}`, config);
             return {
                 code: 200,
                 metadata: resp.data
@@ -125,13 +126,17 @@ class DawnService {
         }
     }
     static RunAndCheck = async ({ proxy, token, userName, extensionid }) => {
-        const data = await DawnService.KeepAlive({ proxy, token, userName, extensionid });
-        if (data.code === 200) {
-            console.log(`${userName} ${data.metadata?.message}`);
+        try {
+            const data = await DawnService.KeepAlive({ proxy, token, userName, extensionid });
+            if (data.code === 200) {
+                console.log(`${userName} ${data.metadata?.message}`);
+            }
+    
+            const points = await this.CheckPoint({ proxy, token, extensionid });
+            console.log(`${userName}: ${points}`)
+        } catch (error) {
+            console.log(`${userName}: ${error.message}`)
         }
-
-        const points = await this.CheckPoint({ proxy, token, extensionid });
-        console.log(`${userName}: ${points}`)
     }
 
     static runWithTime = ({ proxy, token, userName, extensionid, timeRun }) => {
