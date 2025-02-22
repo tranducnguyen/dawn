@@ -5,10 +5,14 @@ require('dotenv').config();
 (async () => {
     let listData = await readFile('./data.txt');
     let listFail = [];
-    const password = process.env.PASSSWORD;
+    const passwordDefault = process.env.PASSSWORD;
     for (let item of listData) {
 
-        const [userName, token, proxy, extensionId] = item.split('|');
+        const [userName, token, proxy, extensionId, password] = item.split('|');
+        if(!password){
+            password = passwordDefault;
+        }
+        
         const tokenLogin = await DawnService.DoLogin({
             proxy, userName, password, extensionId
         });
