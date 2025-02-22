@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'dawn',
-      script: 'server.js',
+      script: 'start.js',
       instances: '1',
       exec_mode: 'cluster',
       autorestart: true,
@@ -17,7 +17,7 @@ module.exports = {
         compress: true,
         dateext: true,
         max_size: '10M',
-        retain: '37',
+        retain: '7',
         dateFormat: 'YYYY-MM-DD_HH-mm-ss',
         workerInterval: '30',
         rotateInterval: '0 0 * * *',

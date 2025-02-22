@@ -16,7 +16,21 @@ async function readFile(filePath) {
   return lines;
 }
 
+async function appendFile(filePath, data) {
+  return new Promise((resolve, reject) => {
+    fs.appendFile(filePath, data, (err) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 
 module.exports = {
-  readFile
+  readFile,
+  appendFile
 }
